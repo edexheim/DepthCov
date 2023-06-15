@@ -220,9 +220,6 @@ The Software
 
 DepthCov is a framework for learning depth covariance, and has applications such as depth completion and dense monocular visual odometry. It is based on the techniques described in the following publication:
 
-vMAP is an object-level mapping system with each object represented by a small MLP, that can be efficiently vectorised trained.
-It is based on the techniques described in the following publication:
-
     • Eric Dexheimer, Andrew J. Davison. Learning a Depth Covariance Function. CVPR, 2023
 _________________________
 
