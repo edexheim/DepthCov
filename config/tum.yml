@@ -1,0 +1,59 @@
+name: Depth odom config
+
+# Tracking
+tracking:
+  device: cpu
+  dtype: float
+  pyr:
+    start_level: 0
+    end_level: 3
+    depth_interp_mode: nearest_neighbor
+  grad_pruning:
+    start_res: [192, 256] # [H, W]
+    nonmax_suppression_window: 2
+    grad_norm_thresh: 0.0e-2
+  term_criteria:
+    max_iter: 100
+    delta_norm: 1.0e-8
+    abs_tol: 1.0e-10
+    rel_tol: 1.0e-10
+  sigmas:
+    photo: 1.0e-1
+  keyframing:
+    kf_depth_motion_ratio: 0.12
+    kf_num_pixels_frac: 0.75 # 36864 # 39322 # 0.8 * 49152
+    one_way_depth_motion_ratio: 0.04
+    one_way_pixel_frac: 0.85
+
+# Mapping
+mapping:
+  device: cuda:0
+  dtype: double
+  model_path: models/scannet.ckpt
+  graph:
+    num_keyframes: 8
+    num_one_way_frames: 2 # TODO: per keyframe? or most recent? or reference one?
+    radius: 0.0 # Attach non-consecutive frames within this radius
+  photo_construction:
+    nonmax_suppression_window: 3
+    pairwise_batch_size: 32
+  term_criteria:
+    max_iter: 20
+    delta_norm: 1.0e-8
+    abs_tol: 1.0e-6
+    rel_tol: 1.0e-6
+  sigmas:
+    photo: 1.0e-1
+    # log_depth: 2.0e-1
+    mean_depth_prior: 1.0e+0
+    scale_prior: 1.0e-4
+    pose_prior: 1.0e-4
+  sampling:
+    mode: greedy_conditional_entropy # ["random_uniform", "greedy_conditional_entropy"]
+    max_samples: 64
+    max_stdev_thresh: 0.04 # -1.0e+8 # 0.04 # Negative for no threshold
+  init:
+    start_level: 0
+    end_level: 3
+    kf_depth_motion_ratio: 0.12
+    kf_num_pixels_viz: 36864 # 36864 # 39322 # 0.8 * 49152

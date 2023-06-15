@@ -1,0 +1,10 @@
+__pycache__/
+build
+dist
+*.egg-info
+.vscode/
+.DS_Store
+*.so
+lietorch
+profile.html
+profile.json
