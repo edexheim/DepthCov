@@ -52,11 +52,19 @@ Use ```depth_cov/train.py``` to jointly train the GP hyperparameters and the UNe
 
 ## Depth Completion Examples
 
+<p align="center">
+  <img width=100% src="https://github.com/edexheim/DepthCov/blob/master/docs/depth_comp.gif">
+</p>
+
 To see how to perform depth completion, see the ```depth_cov/depth_completion_viz.py``` example, which shows the output conditional mean and variance given randomply sampled observations.
 
 We also include an interactive demo to visualize the effect of adding new observations and how a covariance matrix looks in ```depth_cov/active_depth_viz.py```.  The user may click on the RGB image or the standard deviation visualization to improve the depth estimate.
 
 ## Real-Time Odometry (DepthCov-VO)
+
+<p align="center">
+  <img width=100% src="https://github.com/edexheim/DepthCov/blob/master/docs/depth_cov.gif">
+</p>
 
 The file ```depth_cov/odom_dataset.py``` can be used to run the odometry on a dataset while ```depth_cov/odom_demo.py``` is set up to run the real-time odometry with an Intel RealSense.  
 
