@@ -56,6 +56,10 @@ class OdomWindow():
     self.idx_panel.add_child(self.idx_label)
     self.idx_panel.add_child(next_frame_button)
 
+    base_pose_button = gui.Button("Reset base pose")
+    base_pose_button.vertical_padding_em = 0.0
+    base_pose_button.set_on_clicked(self._on_press2)
+
     # Point cloud viz
     normals_button = gui.ToggleSwitch("Show Normals")
     normals_button.set_on_clicked(self._on_normals_switch)
@@ -104,6 +108,8 @@ class OdomWindow():
     self.ctrl_panel.add_child(self.idx_panel)
     self.ctrl_panel.add_fixed(vspacing)
     self.ctrl_panel.add_child(self.follow_lv)
+    self.ctrl_panel.add_fixed(vspacing)
+    self.ctrl_panel.add_child(base_pose_button)
     self.ctrl_panel.add_fixed(vspacing)
     self.ctrl_panel.add_child(normals_button)
     self.ctrl_panel.add_fixed(vspacing)
@@ -158,7 +164,7 @@ class OdomWindow():
     self.idx = 0
 
     self.scale = 1.0
-    self.pose_init = torch.eye(4)
+    self.base_pose = torch.eye(4)
 
     # Start processes
     torch.multiprocessing.set_start_method("spawn")
@@ -224,6 +230,9 @@ class OdomWindow():
 
   def _on_press(self):
     self.advance_one_frame = True
+
+  def _on_press2(self):
+    self.base_pose = self.est_poses[-1]
 
   def _on_list(self, new_val, is_dbl_click):
     self.follow_val = new_val
@@ -384,7 +393,7 @@ class OdomWindow():
     self.widget3d.scene.add_geometry("est_traj", est_traj_geo, self.line_mat)
 
     if self.follow_val == "Estimated" and est_poses.shape[0] > 0:
-      self.setup_camera_view(est_poses[-1], self.pose_init)
+      self.setup_camera_view(est_poses[-1], self.base_pose)
     elif self.follow_val == "None":
       pass
 
