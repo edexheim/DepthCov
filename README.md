@@ -21,7 +21,7 @@ Install the following packages:
 ```
 conda install pytorch torchvision pytorch-cuda=11.7 -c pytorch -c nvidia
 conda install matplotlib h5py
-pip install pytorch-lightning=1.8.2 opencv-python-headless open3d pyrealsense2 
+pip install pytorch-lightning==1.8.2 opencv-python-headless open3d pyrealsense2 
 ```
 
 For the odometry backend, we require the batched SE3 exponential map from Lietorch https://github.com/princeton-vl/lietorch.  Clone the repo and run the setup command while in the new conda environment:
