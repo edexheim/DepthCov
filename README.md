@@ -59,6 +59,12 @@ To see how to perform depth completion, see the ```depth_cov/depth_completion_vi
 
 We also include an interactive demo to visualize the effect of adding new observations and how a covariance matrix looks in ```depth_cov/active_depth_viz.py```.  The user may click on the RGB image or the standard deviation visualization to improve the depth estimate.
 
+## Bundle Adjustment with Depth Priors
+
+https://github.com/edexheim/DepthCov/assets/47486413/fd49812b-6ea8-4925-95aa-796f15c229c8
+
+To run the bundle adjustment example ```depth_cov/bundle_adjustment.py```, follow the additional installation instructions at https://github.com/edexheim/DepthCovFactors. 
+
 ## Real-Time Odometry (DepthCov-VO)
 
 
@@ -85,7 +91,7 @@ We use the RGB stream for a RealSense camera via the pyrealsense2 API.  We assum
 
 
 # Citation
-If you found this code/work to be useful in your own research, please considering citing the following:
+If you found this code/work to be useful in your own research, please consider citing the following:
 ```bibtex
 @inproceedings{dexheimer2023depthcov,
   title={{Learning a Depth Covariance Function},
