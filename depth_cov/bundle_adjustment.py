@@ -159,7 +159,7 @@ def get_obs(rgb_list, cal3_s2, dist_coeffs):
       # Add new points
       feature_mask = 255*np.ones(gray_curr.shape, dtype=np.uint8)
       for j in range(kps_curr.shape[0]):
-        cv2.circle(feature_mask, (kps_curr[j,0,0], kps_curr[j,0,1]), feature_params["minDistance"], 0, -1)
+        cv2.circle(feature_mask, (int(kps_curr[j,0,0]), int(kps_curr[j,0,1])), feature_params["minDistance"], 0, -1)
       new_feature_params = feature_params.copy()
       new_feature_params["maxCorners"] = feature_params["maxCorners"] - kps_curr.shape[0]
       if new_feature_params["maxCorners"] > 0:
@@ -316,7 +316,6 @@ def generate_depth_imgs(model, gaussian_covs_list, coords_norm_list, depth_prior
     # NOTE: Bundle adjustment without prior does not have scale variable, so we will use the median of the sparse reprojected depths
     mean_log_depth = torch.log(torch.median(depth_pred, dim=1, keepdim=True).values).float()
 
-
     with torch.no_grad():
       log_depth_img, _, _, _ = model.condition_level(gaussian_covs_list[i], -1, coords_norm_list[i][0,...], log_depth_pred, mean_log_depth, img_size)
 
@@ -375,9 +374,12 @@ def bundle_adjustment(poses, poses_init, landmarks_init, keypoints_list, ids_lis
         graph.push_back(scale_prior)
 
   # Optimize
-  params = gtsam.LevenbergMarquardtParams()
+  # params = gtsam.LevenbergMarquardtParams(gtsam.LevenbergMarquardtParams.CeresDefaults())
+  params = gtsam.LevenbergMarquardtParams.CeresDefaults()
   params.setVerbosity('ERROR') # TERMINATION, ERROR
   params.setlambdaInitial(1e+6)
+  params.setMaxIterations(100)
+  # params.setlambdaUpperBound(1e+16)
   optimizer = gtsam.LevenbergMarquardtOptimizer(graph, values_init, params)
   success = True
   try:
@@ -493,9 +495,12 @@ def run_ba(data, model, add_gp_depth_factors, pose_noise):
     success, values_opt, poses_opt, landmarks_opt = bundle_adjustment(pose_list, poses_init, landmarks_init, keypoints_filt_list, ids_filt_list, cal3_s2, depth_prior_factors, add_gp_depth_factors)
 
     # Evaluation
-    pred_depth_imgs = generate_depth_imgs(model, gaussian_covs_list, coords_norm_filt_list, depth_prior_factors, depth_list, values_opt, rgb_torch_list[0].shape[-2:])
+    if success:
+      pred_depth_imgs = generate_depth_imgs(model, gaussian_covs_list, coords_norm_filt_list, depth_prior_factors, depth_list, values_opt, rgb_torch_list[0].shape[-2:])
 
-    plot_results(poses_opt, landmarks_opt, cal3_s2, rgb_torch_list, pred_depth_imgs)
+      plot_results(poses_opt, landmarks_opt, cal3_s2, rgb_torch_list, pred_depth_imgs)
+    else:
+      print("Unsuccessful!")
 
   return
 
@@ -511,7 +516,7 @@ if __name__ == "__main__":
   add_gp_depth_factors = True
 
   # Setup input data
-  base_dir = "path/tum/"
+  base_dir = "/home/edex/Documents/data/tum/"
 
   seqs = [
     "rgbd_dataset_freiburg3_long_office_household/"
